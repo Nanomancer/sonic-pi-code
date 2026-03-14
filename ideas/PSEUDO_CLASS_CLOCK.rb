@@ -26,8 +26,18 @@ set :current_16th, 0
 define :clk_div_even do | idx, display=false |
   ### only on start
   count_reset_all(idx) # done, untested
-  cue :clk # send cue here?
-  set :current_sixteenth, (1 + get[:current_sixteenth]) # always
+  send_cue(look, :bar64, 1024)
+  send_cue(look, :bar32, 512)
+  send_cue(look, :bar16, 256)
+  send_cue(look, :bar8, 128)
+  send_cue(look, :bar4, 64)
+  send_cue(look, :bar2, 32)
+  send_cue(look, :bar1, 16,true)
+  send_cue(look, :bar_half, 8,true)
+  send_cue(look, :beat, 4,true)
+  send_cue(look, :note_8, 2,true)
+  cue :clk, count: idx
+  set :current_16th, (1 + get[:current_16th]) # always
   
   #### resets here- needs to go after cues?
   reset_count(:current_bar, num_bars) # if req
@@ -70,6 +80,12 @@ define :send_cue_and_update_count do |idx, key, int, bool=false| #- poorly names
     cue key
   end
 end
+
+define :print_bars_and_beats do |len=8, beats=4| ### len and beats should coome from getters
+  puts "Current Bar : #{get[:current_bar]} / #{len} | Total: #{total_bars} bars"
+  puts "Current Beat: #{current_beat} / #{beats} | Total: #{total_beats} beats"
+end
+
 
 ########
 ### which cues should have thier own thread? if any?
