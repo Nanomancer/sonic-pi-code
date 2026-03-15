@@ -4,7 +4,7 @@
 ### call like:
 
 ##| live_loop :the_clock do
-##|   even_clk_div(tick)
+##|   clk_div_even(tick)
 ##|   sleep 0.25
 ##| end
 
@@ -21,6 +21,7 @@ set :current_16th, 0
 
 define :clk_div_even do | idx, display=false |
   count_reset_all(idx) # done, untested
+  display_bars_and_beats(get[:num_bars], get[:num_beats])
   send_cue_and_update_count(look, :bar64, 1024) # done, untested
   send_cue_and_update_count(look, :bar32, 512)
   send_cue_and_update_count(look, :bar16, 256)
@@ -62,24 +63,30 @@ define :count_reset_all do |idx|
   end
 end
 
-define :send_cue_and_update_count do |idx, key_cue, key_current, key_total, div, bool=false|
+define :send_cue_and_update_count do |idx, key_cue, div, bool=false| # too manys args
   ### bool is optional start on zero or not
   if test_modulo(idx, div) == true and bool == true
     ### send on clock count of zero
-    display_bars_and_beats(get[:num_bars], get[:num_beats])
+    
     cue key_cue
-    update_count(key_current, key_total)
-  elsif test_modulo(idx, int) == true and idx > 0
+    ### unnecessary calls to update_count
+    update_count_all(idx)
+  elsif test_modulo(idx, div) == true and idx > 0
     ### default behaviour
-    display_bars_and_beats(get[:num_bars], get[:num_beats])
     cue key_cue
-    update_count(key_current, key_total)
+    update_count_all(idx)
   end
+end
+
+define :update_count_all do |idx|
+  update_count(:current_bar, :total_bars)
+  update_count(:current_beat, :total_beats)
+  update_count(:current_16th, idx)
 end
 
 define :display_bars_and_beats do |num_bars, num_beats|
   puts "Current Bar : #{get[:current_bar]} / #{get[:num_bars]} | Total: #{get[:total_bars]} bars"
-  puts "Current Beat: #{get[:current_beat]}] / #{get[:num_beats]} | Total: #{get[:total_beats]} beats"
+  puts "Current Beat: #{get[:current_beat]} / #{get[:num_beats]} | Total: #{get[:total_beats]} beats"
 end
 
 define :test_modulo do |idx, division|
