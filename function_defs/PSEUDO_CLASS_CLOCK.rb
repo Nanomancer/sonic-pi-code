@@ -38,19 +38,10 @@ define :clk_div_even do | idx, display=false |
   #### resets here- needs to go after cues?
   reset_count(:current_bar, get[:num_bars]) # done, untested
   reset_count(:current_beat, get[:num_beats])
-  reset_count(:current_16th, get[:num_beats])
+  reset_count(:current_16th, (16 * get[:num_beats]))
 end
 
-define :update_count do |key_current, key_total|
-  set key_current, (1 + get[key_current])
-  set key_total, (1 + get[key_current]) ### update the value here? after cues are sent? WATCH OUT 1+0 error!?
-end
-
-define :reset_count do |key, reset_every|
-  if get[key] > reset_every #(bars-1)
-    set key, 0
-  end
-end
+##### Helpers #####
 
 define :count_reset_all do |idx|
   if idx == 0
@@ -61,6 +52,11 @@ define :count_reset_all do |idx|
     set :current_beat, 0
     set :current_16th, 0
   end
+end
+
+define :display_bars_and_beats do |num_bars, num_beats|
+  ##| puts "Current Bar : #{get[:current_bar]} / #{get[:num_bars]} | Total: #{get[:total_bars]} bars"
+  ##| puts "Current Beat: #{get[:current_beat]} / #{get[:num_beats]} | Total: #{get[:total_beats]} beats"
 end
 
 define :send_cue_and_update_count do |idx, key_cue, div, bool=false| # too manys args
@@ -78,19 +74,26 @@ define :send_cue_and_update_count do |idx, key_cue, div, bool=false| # too manys
   end
 end
 
+define :test_modulo do |idx, division|
+  if idx % division == 0
+    return true
+  end
+end
+
 define :update_count_all do |idx|
   update_count(:current_bar, :total_bars)
   update_count(:current_beat, :total_beats)
   update_count(:current_16th, idx)
 end
 
-define :display_bars_and_beats do |num_bars, num_beats|
-  puts "Current Bar : #{get[:current_bar]} / #{get[:num_bars]} | Total: #{get[:total_bars]} bars"
-  puts "Current Beat: #{get[:current_beat]} / #{get[:num_beats]} | Total: #{get[:total_beats]} beats"
+define :update_count do |key_current, key_total|
+  set key_current, (1 + get[key_current])
+  set key_total, (1 + get[key_total]) ### update the value here? after cues are sent? WATCH OUT 1+0 error!?
 end
 
-define :test_modulo do |idx, division|
-  if idx % division == 0
-    return true
+define :reset_count do |key, reset_every|
+  if get[key] > reset_every #(bars-1)
+    set key, 0
   end
 end
+
