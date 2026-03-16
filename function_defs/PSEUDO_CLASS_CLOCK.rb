@@ -35,9 +35,9 @@ define :clk_div_even do | idx, display=false |
   send_cue(idx, :beat, 4,true)
   send_cue(idx, :note_8th, 2,true)
   cue :clk, count: idx
-  update_bar_counter(idx, 16)
-  update_beat_counter(idx, 4)
-  update_count(:current_16th)
+  set_bar_counter(idx, 16)
+  set_beat_counter(idx, 4)
+  set_count(:current_16th)
   
   reset_count(:current_bar, (get[:num_bars]))
   reset_count(:current_beat, (get[:num_beats]))
@@ -57,20 +57,6 @@ define :count_reset_all do |idx|
   end
 end
 
-define :log_bar_counter do |num_bars, num_beats|
-  puts "Current Bar : #{ (1 + get[:current_bar]) } / #{get[:num_bars]} | Total: #{ (1 + get[:total_bars]) } bars"
-  ##| puts "Current Bar : #{ get[:current_bar] } / #{get[:num_bars]} | Total: #{ get[:total_bars] } bars"
-end
-
-define :log_beat_counter do |num_bars, num_beats|
-  puts "Current Beat: #{ (1 + get[:current_beat]) } / #{get[:num_beats]} | Total: #{ (1 + get[:total_beats]) } beats"
-  ##| puts "Current Beat: #{ get[:current_beat] } / #{get[:num_beats]} | Total: #{ get[:total_beats] } beats"
-end
-
-define :log_16th_counter do |num_bars, num_beats, idx|
-  ##| puts "Current 16th: #{ (1 + get[:current_16th]) } / #{(16 * get[:num_beats])}| Total: #{ (1 + idx) }"
-  puts "Current 16th: #{ get[:current_16th] } / #{ (16 * get[:num_beats]) }| Total: #{ idx }"
-end
 
 define :send_cue do |idx, key_cue, div, bool=false|
   ### bool is optional start on zero or not
@@ -83,17 +69,18 @@ define :send_cue do |idx, key_cue, div, bool=false|
   end
 end
 
-define :update_bar_counter do |idx, div|
+define :set_bar_counter do |idx, div|
   if test_modulo(idx, div) == true and idx > 0
-    update_count(:current_bar)
-    update_count(:total_bars)
+    set_count(:current_bar)
+    set_count(:total_bars)
   end
 end
 
-define :update_beat_counter do |idx, div|
-  if test_modulo(idx, div) == true and idx > 0
-    update_count(:current_beat)
-    update_count(:total_beats)
+define :set_beat_counter do |idx, div|
+  if test_modulo(idx, div) == true and idx >= 3 # need more complex logic here
+    # onlu when above and
+    set_count(:current_beat)
+    set_count(:total_beats)
   end
 end
 
@@ -103,7 +90,7 @@ define :test_modulo do |idx, division|
   end
 end
 
-define :update_count do |key|
+define :set_count do |key|
   set key, (1 + get[key])
 end
 
@@ -113,10 +100,26 @@ define :reset_count do |key, reset_every|
   end
 end
 
+
+define :log_bar_counter do |num_bars, num_beats|
+  ##| puts "Current Bar : #{ (1 + get[:current_bar]) } / #{get[:num_bars]} | Total: #{ (1 + get[:total_bars]) } bars"
+  puts "Current Bar : #{ get[:current_bar] } / #{get[:num_bars]} | Total: #{ get[:total_bars] } bars"
+end
+
+define :log_beat_counter do |num_bars, num_beats|
+  ##| puts "Current Beat: #{ (1 + get[:current_beat]) } / #{get[:num_beats]} | Total: #{ (1 + get[:total_beats]) } beats"
+  puts "Current Beat: #{ get[:current_beat] } / #{get[:num_beats]} | Total: #{ get[:total_beats] } beats"
+end
+
+define :log_16th_counter do |num_bars, num_beats, idx|
+  ##| puts "Current 16th: #{ (1 + get[:current_16th]) } / #{(16 * get[:num_beats])}| Total: #{ (1 + idx) }"
+  puts "Current 16th: #{ get[:current_16th] } / #{ (16 * get[:num_beats]) }| Total: #{ idx }"
+end
+
 define :print_all_values do |idx|
-  if get[:log_counters] == true and idx % 4 == 0
-    log_bar_counter(get[:num_bars], get[:num_beats])
+  if get[:log_counters] == true #and idx % 4 == 0
+    ##| log_bar_counter(get[:num_bars], get[:num_beats])
     log_beat_counter(get[:num_bars], get[:num_beats])
-    ##| log_16th_counter(get[:num_bars], get[:num_beats], idx)
+    log_16th_counter(get[:num_bars], get[:num_beats], idx)
   end
 end
