@@ -21,23 +21,27 @@ set :current_16th, 0
 
 define :clk_div_even do | idx, display=false |
   count_reset_all(idx) # done, untested
-  display_bars_and_beats(get[:num_bars], get[:num_beats])
-  send_cue_and_update_count(look, :bar64, 1024) # done, untested
-  send_cue_and_update_count(look, :bar32, 512)
-  send_cue_and_update_count(look, :bar16, 256)
-  send_cue_and_update_count(look, :bar8, 128)
-  send_cue_and_update_count(look, :bar4, 64)
-  send_cue_and_update_count(look, :bar2, 32)
-  send_cue_and_update_count(look, :bar1, 16,true)
-  send_cue_and_update_count(look, :bar_half, 8,true)
-  send_cue_and_update_count(look, :beat, 4,true)
-  send_cue_and_update_count(look, :note_8th, 2,true)
+  puts "current_16th  : #{get[:current_16th]}"
+  puts "idx val before: #{idx}"
+  ##| display_bars_and_beats(get[:num_bars], get[:num_beats])
+  ##| send_cue_and_update_count(look, :bar64, 1024) # done, untested
+  ##| send_cue_and_update_count(look, :bar32, 512)
+  ##| send_cue_and_update_count(look, :bar16, 256)
+  ##| send_cue_and_update_count(look, :bar8, 128)
+  ##| send_cue_and_update_count(look, :bar4, 64)
+  ##| send_cue_and_update_count(look, :bar2, 32)
+  ##| send_cue_and_update_count(look, :bar1, 16,true)
+  ##| send_cue_and_update_count(look, :bar_half, 8,true)
+  ##| send_cue_and_update_count(look, :beat, 4,true)
+  ##| send_cue_and_update_count(look, :note_8th, 2,true)
   cue :clk, count: idx
-  set :current_16th, (1 + get[:current_16th]) # always
+  update_count(:current_16th)
+  ##| puts "updated current_16th: #{get[:current_16th]}"
+  ##| puts "idx val after       : #{idx}"
   
   #### resets here- needs to go after cues?
-  reset_count(:current_bar, get[:num_bars]) # done, untested
-  reset_count(:current_beat, get[:num_beats])
+  ##| reset_count(:current_bar, get[:num_bars]) # done, untested
+  ##| reset_count(:current_beat, get[:num_beats])
   reset_count(:current_16th, (16 * get[:num_beats]))
 end
 
@@ -81,14 +85,15 @@ define :test_modulo do |idx, division|
 end
 
 define :update_count_all do |idx|
-  update_count(:current_bar, :total_bars)
-  update_count(:current_beat, :total_beats)
-  update_count(:current_16th, idx)
+  update_count(:current_bar)
+  update_count(:total_bars)
+  update_count(:current_beat)
+  update_count(:total_beats)
+  update_count(:current_16th)
 end
 
-define :update_count do |key_current, key_total|
-  set key_current, (1 + get[key_current])
-  set key_total, (1 + get[key_total]) ### update the value here? after cues are sent? WATCH OUT 1+0 error!?
+define :update_count do |key|
+  set key, (1 + get[key])
 end
 
 define :reset_count do |key, reset_every|
