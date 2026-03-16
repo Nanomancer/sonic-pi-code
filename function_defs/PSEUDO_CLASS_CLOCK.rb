@@ -21,8 +21,8 @@ set :current_16th, 0
 
 define :clk_div_even do | idx, display=false |
   count_reset_all(idx)
-  puts "current_16th  : #{get[:current_16th]}"
-  puts "idx val before: #{idx}"
+  ##| puts "current_16th  : #{get[:current_16th]}"
+  ##| puts "idx val before: #{idx}"
   ##| display_bars_and_beats(get[:num_bars], get[:num_beats])
   send_cue(idx, :bar64, 1024)
   send_cue(idx, :bar32, 512)
@@ -34,14 +34,17 @@ define :clk_div_even do | idx, display=false |
   send_cue(idx, :bar1, 16, true)
   
   if test_modulo(idx, 16) == true
+    puts "Current Bar : #{get[:current_bar]} / #{get[:num_bars]} | Total: #{get[:total_bars]} bars"
     update_count(:current_bar)
     update_count(:total_bars)
+    
   end
   
   send_cue(idx, :bar_half, 8,true)
   
   send_cue(idx, :beat, 4,true)
   if test_modulo(idx, 4) == true
+    puts "Current Beat: #{get[:current_beat]} / #{get[:num_beats]} | Total: #{get[:total_beats]} beats"
     update_count(:current_beat)
     update_count(:total_beats)
   end
@@ -49,6 +52,7 @@ define :clk_div_even do | idx, display=false |
   send_cue(idx, :note_8th, 2,true)
   
   cue :clk, count: idx
+  puts "Current 16th #{get[:current_16th]} / #{16 * get[:num_beats]} | Total: #{16 * get[:total_beats]}"
   update_count(:current_16th)
   ##| puts "updated current_16th: #{get[:current_16th]}"
   ##| puts "idx val after       : #{idx}"
@@ -87,13 +91,6 @@ define :send_cue do |idx, key_cue, div, bool=false|
   end
 end
 
-define :send_cue_and_update_count do |idx, key_cue, key_to_update, div |
-  if test_modulo(idx, div) == true
-    cue key_cue
-    update_count(key_to_update)
-  end
-end
-
 define :test_modulo do |idx, division|
   if idx % division == 0
     return true
@@ -105,7 +102,7 @@ define :update_count do |key|
 end
 
 define :reset_count do |key, reset_every|
-  if get[key] > reset_every #(bars-1)
+  if get[key] >= reset_every #(bars-1)
     set key, 0
   end
 end
