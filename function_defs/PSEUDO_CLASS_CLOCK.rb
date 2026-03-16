@@ -16,6 +16,7 @@ set :total_beats, 0
 set :current_bar, 0
 set :current_beat, 0
 set :current_16th, 0
+set :log_counters, true
 
 ##### 'MAIN()' function
 
@@ -93,8 +94,10 @@ end
 
 define :update_beat_counter do |idx, div|
   if test_modulo(idx, div) == true
-    log_bar_counter(get[:num_bars], get[:num_beats])
-    log_beat_counter(get[:num_bars], get[:num_beats])
+    if get[:log_counters] == true
+      log_bar_counter(get[:num_bars], get[:num_beats])
+      log_beat_counter(get[:num_bars], get[:num_beats])
+    end
     update_count(:current_beat)
     update_count(:total_beats)
   end
