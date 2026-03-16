@@ -29,23 +29,12 @@ define :clk_div_even do | idx, display=false |
   send_cue(idx, :bar2, 32)
   
   send_cue(idx, :bar1, 16, true)
-  ##| define :update_bar_counter do |idx, div|
   update_bar_counter(idx, 16)
-  ##| if test_modulo(idx, 16) == true
-  ##|   log_bar_counter(get[:num_bars], get[:num_beats])
-  ##|   update_count(:current_bar)
-  ##|   update_count(:total_bars)
-  ##| end
   
   send_cue(idx, :bar_half, 8,true)
   
   send_cue(idx, :beat, 4,true)
   update_beat_counter(idx, 4)
-  ##| if test_modulo(idx, 4) == true
-  ##|   log_beat_counter(get[:num_bars], get[:num_beats])
-  ##|   update_count(:current_beat)
-  ##|   update_count(:total_beats)
-  ##| end
   
   send_cue(idx, :note_8th, 2,true)
   
@@ -96,7 +85,7 @@ end
 
 define :update_bar_counter do |idx, div|
   if test_modulo(idx, div) == true
-    log_bar_counter(get[:num_bars], get[:num_beats])
+    ##| log_bar_counter(get[:num_bars], get[:num_beats])
     update_count(:current_bar)
     update_count(:total_bars)
   end
@@ -104,6 +93,7 @@ end
 
 define :update_beat_counter do |idx, div|
   if test_modulo(idx, div) == true
+    log_bar_counter(get[:num_bars], get[:num_beats])
     log_beat_counter(get[:num_bars], get[:num_beats])
     update_count(:current_beat)
     update_count(:total_beats)
