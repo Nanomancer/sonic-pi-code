@@ -30,7 +30,7 @@ define :clk_div_even do | idx, display=false |
   
   send_cue(idx, :bar1, 16, true)
   if test_modulo(idx, 16) == true
-    puts "Current Bar : #{get[:current_bar]} / #{get[:num_bars]} | Total: #{get[:total_bars]} bars"
+    log_bar_counter(get[:num_bars], get[:num_beats])
     update_count(:current_bar)
     update_count(:total_bars)
   end
@@ -39,7 +39,7 @@ define :clk_div_even do | idx, display=false |
   
   send_cue(idx, :beat, 4,true)
   if test_modulo(idx, 4) == true
-    puts "Current Beat: #{get[:current_beat]} / #{get[:num_beats]} | Total: #{get[:total_beats]} beats"
+    log_beat_counter(get[:num_bars], get[:num_beats])
     update_count(:current_beat)
     update_count(:total_beats)
   end
@@ -47,7 +47,7 @@ define :clk_div_even do | idx, display=false |
   send_cue(idx, :note_8th, 2,true)
   
   cue :clk, count: idx
-  puts "Current 16th #{get[:current_16th]} / #{16 * get[:num_beats]} | Total: #{16 * get[:total_beats]}"
+  ##| log_16th_counter(get[:num_bars], get[:num_beats], idx)
   update_count(:current_16th)
   
   reset_count(:current_bar, (get[:num_bars]))
@@ -68,9 +68,16 @@ define :count_reset_all do |idx|
   end
 end
 
-define :display_bars_and_beats do |num_bars, num_beats|
-  puts "Current Bar : #{get[:current_bar]} / #{get[:num_bars]} | Total: #{get[:total_bars]} bars"
-  puts "Current Beat: #{get[:current_beat]} / #{get[:num_beats]} | Total: #{get[:total_beats]} beats"
+define :log_bar_counter do |num_bars, num_beats|
+  puts "Current Bar : #{ (1 + get[:current_bar]) } / #{get[:num_bars]} | Total: #{ (1 + get[:total_bars]) } bars"
+end
+
+define :log_beat_counter do |num_bars, num_beats|
+  puts "Current Beat: #{ (1 + get[:current_beat]) } / #{get[:num_beats]} | Total: #{ (1 + get[:total_beats]) } beats"
+end
+
+define :log_16th_counter do |num_bars, num_beats, idx|
+  puts "Current 16th #{ (1 + get[:current_16th]) } / #{(16 * get[:num_beats])} | Total: #{ (1 + idx) }"
 end
 
 define :send_cue do |idx, key_cue, div, bool=false|
