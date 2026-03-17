@@ -68,11 +68,11 @@ define :send_cue do |idx, key_cue, div, bool=false|
   if test_modulo(idx, div) == true and bool == true
     ### send on clock count of zero
     cue key_cue
-    if get[:debug_all] then send_cue_debug(key_cue, idx) end
+    if get[:debug_all] then debug_send_cue(key_cue, idx) end
   elsif test_modulo(idx, div) == true and idx > 0
     ### default behaviour
     cue key_cue
-    if get[:debug_all] then send_cue_debug(key_cue, idx) end
+    if get[:debug_all] then debug_send_cue(key_cue, idx) end
   end
 end
 
@@ -80,7 +80,7 @@ define :set_bar_counter do |idx|
   if test_modulo(idx, 16) == true and idx > 0
     set_count(:current_bar)
     set_count(:total_bars)
-    if get[:debug_all] then bar_counter_debug(idx) end
+    if get[:debug_all] then debug_bar_counter(idx) end
   end
 end
 
@@ -88,7 +88,7 @@ define :set_beat_counter do |idx|
   if test_modulo(idx, 4) == true and idx > 0
     set_count(:current_beat)
     set_count(:total_beats)
-    if get[:debug_all] then beat_counter_debug(idx) end
+    if get[:debug_all] then debug_beat_counter(idx) end
   end
 end
 
@@ -132,14 +132,14 @@ define :print_all_values do |idx|
   end
 end
 
-define :send_cue_debug do |key_cue, idx|
+define :debug_send_cue do |key_cue, idx|
   puts "send_cue #{key_cue} exec. on idx=#{idx} | beat=#{get[:current_beat]} | bar=#{get[:current_bar]}"
 end
 
-define :bar_counter_debug do |idx|
-  puts "Bar cntr exec. | mod val=#{idx % get[:num_bars]} | bar=#{get[:current_bar]} | idx=#{idx}"
+define :debug_bar_counter do |idx|
+  puts "Bar cntr exec.  | mod val=#{idx % get[:num_bars]}  | bar=#{get[:current_bar]}   | idx=#{idx}"
 end
 
-define :beat_counter_debug do |idx|
-  puts "Beat cntr exec. | mod val=#{idx % get[:num_beats]} | beat=#{get[:current_beat]}"
+define :debug_beat_counter do |idx|
+  puts "Beat cntr exec. | mod val=#{idx % get[:num_beats]} | beat=#{get[:current_beat]} | idx=#{idx}"
 end
