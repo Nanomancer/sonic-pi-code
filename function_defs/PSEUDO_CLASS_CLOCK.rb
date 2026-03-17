@@ -1,4 +1,4 @@
-#### PSUEDO_CLASS_CLOCK
+ #### PSUEDO_CLASS_CLOCK
 
 ### KEEP IN MIND LIVE CODING + RULES OF AUDIENCE UNDERSTANDING
 ### call like:
@@ -107,33 +107,9 @@ define :reset_count do |key, reset_every|
   end
 end
 
-
-define :log_bar_counter do
-  ##| puts "Current Bar : #{ (1 + get[:current_bar]) } / #{get[:num_bars]} | Total: #{ (1 + get[:total_bars]) } bars"
-  puts "Bar : #{ get[:current_bar] } / #{get[:num_bars]} | Total: #{ get[:total_bars] }"
-end
-
-define :log_beat_counter do
-  ##| puts "Current Beat: #{ (1 + get[:current_beat]) } / #{get[:num_beats]} | Total: #{ (1 + get[:total_beats]) } beats"
-  puts "Beat: #{ get[:current_beat] } / #{get[:num_beats]} | Total: #{ get[:total_beats] }"
-end
-
-define :log_16th_counter do |idx|
-  ##| puts "Current 16th: #{ (1 + get[:current_16th]) } / #{(16 * get[:num_beats])}| Total: #{ (1 + idx) }"
-  puts "16th: #{ get[:current_16th] } / #{ (16 * get[:num_beats]) }| Total: #{ idx }"
-end
-
 define :log_slimline_counter do |idx|
   if get[:log_counters] == true #and idx % 4 == 0
     puts "Bar: #{get[:current_bar]} / #{get[:num_bars]} | Beat: #{ get[:current_beat] } / #{get[:num_beats]} | 16th: #{idx}"
-  end
-end
-
-define :print_all_values do |idx|
-  if get[:log_counters] == true #and idx % 4 == 0
-    log_bar_counter()
-    log_beat_counter()
-    log_16th_counter(idx)
   end
 end
 
