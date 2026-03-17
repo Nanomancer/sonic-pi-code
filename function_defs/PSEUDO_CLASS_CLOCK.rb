@@ -2,9 +2,9 @@
 
 ### KEEP IN MIND LIVE CODING + RULES OF AUDIENCE UNDERSTANDING
 ### call like:
-
+## note - sleep now handled by clk_div_even()
 ##| live_loop :the_clock do
-##|   clk_div_even(tick)
+##|   clk_div_even(tick) 
 ##| end
 
 ##### INITIALISE KEYS #####
@@ -22,7 +22,6 @@ set :rate, 0.25
 
 define :clk_div_even do | idx, display=false |
   count_reset_all(idx)
-  print_all_values(idx)
   send_cue(idx, :bar64, 1024)
   send_cue(idx, :bar32, 512)
   send_cue(idx, :bar16, 256)
@@ -37,10 +36,12 @@ define :clk_div_even do | idx, display=false |
   cue :clk, count: idx
   
   set_beat_counter(idx)
+  set_bar_counter(idx)
+  set_count(:current_16th)
+  print_all_values(idx)
+  
   sleep get[:rate]
   
-  ##| set_bar_counter(idx, 16)
-  set_count(:current_16th)
   
   ##| reset_count(:current_bar, (get[:num_bars]))
   ##| reset_count(:current_beat, (get[:num_beats]))
@@ -66,25 +67,27 @@ define :send_cue do |idx, key_cue, div, bool=false|
   if test_modulo(idx, div) == true and bool == true
     ### send on clock count of zero
     cue key_cue
-    puts "send_cue executed on idx=#{idx} | mod val=#{idx % get[:num_beats]} | beat=#{get[:current_beat]}"
+    puts "send_cue #{key_cue} exec. on idx=#{idx} | beat=#{get[:current_beat]} | bar=#{get[:current_bar]}"
   elsif test_modulo(idx, div) == true and idx > 0
     ### default behaviour
     cue key_cue
+    puts "send_cue #{key_cue} exec. on idx=#{idx} | beat=#{get[:current_beat]} | bar=#{get[:current_bar]}"
   end
 end
 
-define :set_bar_counter do |idx, div|
-  if test_modulo(idx, div) == true and idx > 0
+define :set_bar_counter do |idx|
+  if test_modulo(idx, 16) == true and idx > 0
     set_count(:current_bar)
     set_count(:total_bars)
+    puts "Bar cntr exec. | mod val=#{idx % get[:num_bars]} | bar=#{get[:current_bar]} | idx=#{idx}"
   end
 end
 
 define :set_beat_counter do |idx|
-  if test_modulo(idx, get[:num_beats]) == true and idx > 0 # need more complex logic here
+  if test_modulo(idx, 4) == true and idx > 0
     set_count(:current_beat)
     set_count(:total_beats)
-    puts "Beat counter executed | mod val=#{idx % get[:num_beats]} | beat=#{get[:current_beat]}"
+    puts "Beat cntr exec. | mod val=#{idx % get[:num_beats]} | beat=#{get[:current_beat]}"
   end
 end
 
