@@ -23,6 +23,7 @@ set :debug_all, true
 
 define :clk_div_even do | idx, display=false |
   count_reset_all(idx)
+  print_all_values(idx)
   send_cue(idx, :bar64, 1024)
   send_cue(idx, :bar32, 512)
   send_cue(idx, :bar16, 256)
@@ -35,18 +36,15 @@ define :clk_div_even do | idx, display=false |
   send_cue(idx, :beat, 4,true)
   send_cue(idx, :note_8th, 2,true)
   cue :clk, count: idx
+  sleep get[:rate]
   
   set_beat_counter(idx)
   set_bar_counter(idx)
   set_count(:current_16th)
-  print_all_values(idx)
   
-  sleep get[:rate]
-  
-  
-  ##| reset_count(:current_bar, (get[:num_bars]))
-  ##| reset_count(:current_beat, (get[:num_beats]))
-  ##| reset_count(:current_16th, (16 * get[:num_beats]))
+  reset_count(:current_bar, (get[:num_bars]))
+  reset_count(:current_beat, (get[:num_beats]))
+  reset_count(:current_16th, (16 * get[:num_beats]))
 end
 
 ##### Helpers #####
@@ -126,7 +124,7 @@ end
 
 define :print_all_values do |idx|
   if get[:log_counters] == true #and idx % 4 == 0
-    ##| log_bar_counter(get[:num_bars], get[:num_beats])
+    log_bar_counter(get[:num_bars], get[:num_beats])
     log_beat_counter(get[:num_bars], get[:num_beats])
     log_16th_counter(get[:num_bars], get[:num_beats], idx)
   end
