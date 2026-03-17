@@ -1,4 +1,4 @@
- #### PSUEDO_CLASS_CLOCK
+#### PSUEDO_CLASS_CLOCK
 
 ### KEEP IN MIND LIVE CODING + RULES OF AUDIENCE UNDERSTANDING
 ### call like:
@@ -22,6 +22,7 @@ set :debug_all, true
 ##### 'MAIN()' function
 
 define :clk_div_even do | idx, display=false |
+  if get[:debug_all] and idx == 0 then puts "Clock Started" end
   count_reset_all(idx)
   ##| print_all_values(idx)
   log_slimline_counter(idx)
@@ -58,6 +59,7 @@ define :count_reset_all do |idx|
     set :current_bar, 0
     set :current_beat, 0
     set :current_16th, 0
+    if get[:debug_all] then puts "count_reset_all() exec. idx: #{idx}" end
   end
 end
 
@@ -98,12 +100,20 @@ define :test_modulo do |idx, division|
 end
 
 define :set_count do |key|
+  if get[:debug_all] then prev_val = get[key] end
   set key, (1 + get[key])
+  if get[:debug_all]
+    puts "set_count() exec. prev val: #{prev_val} | new val: #{get[key]} | key: #{key}"
+  end
 end
 
 define :reset_count do |key, reset_every|
-  if get[key] >= reset_every #(bars-1)
+  if get[:debug_all] then prev_val = get[key] end
+  if get[key] > reset_every #(bars-1)
     set key, 0
+    if get[:debug_all]
+      puts "reset_count() exec. prev val: #{prev_val} | new val: #{get[key]} | reset_every: #{reset_every} | key: #{key}"
+    end
   end
 end
 
@@ -114,7 +124,7 @@ define :log_slimline_counter do |idx|
 end
 
 define :debug_send_cue do |key_cue, idx|
-  puts "send_cue #{key_cue} exec. on idx=#{idx} | beat=#{get[:current_beat]} | bar=#{get[:current_bar]}"
+  puts "send_cue exec. on idx=#{idx} | beat=#{get[:current_beat]} | bar=#{get[:current_bar]} | key: :#{key_cue}"
 end
 
 define :debug_bar_counter do |idx|
