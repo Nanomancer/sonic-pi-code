@@ -23,7 +23,8 @@ set :debug_all, true
 
 define :clk_div_even do | idx, display=false |
   count_reset_all(idx)
-  print_all_values(idx)
+  ##| print_all_values(idx)
+  log_slimline_counter(idx)
   send_cue(idx, :bar64, 1024)
   send_cue(idx, :bar32, 512)
   send_cue(idx, :bar16, 256)
@@ -107,26 +108,32 @@ define :reset_count do |key, reset_every|
 end
 
 
-define :log_bar_counter do |num_bars, num_beats|
+define :log_bar_counter do
   ##| puts "Current Bar : #{ (1 + get[:current_bar]) } / #{get[:num_bars]} | Total: #{ (1 + get[:total_bars]) } bars"
   puts "Bar : #{ get[:current_bar] } / #{get[:num_bars]} | Total: #{ get[:total_bars] }"
 end
 
-define :log_beat_counter do |num_bars, num_beats|
+define :log_beat_counter do
   ##| puts "Current Beat: #{ (1 + get[:current_beat]) } / #{get[:num_beats]} | Total: #{ (1 + get[:total_beats]) } beats"
   puts "Beat: #{ get[:current_beat] } / #{get[:num_beats]} | Total: #{ get[:total_beats] }"
 end
 
-define :log_16th_counter do |num_bars, num_beats, idx|
+define :log_16th_counter do |idx|
   ##| puts "Current 16th: #{ (1 + get[:current_16th]) } / #{(16 * get[:num_beats])}| Total: #{ (1 + idx) }"
   puts "16th: #{ get[:current_16th] } / #{ (16 * get[:num_beats]) }| Total: #{ idx }"
 end
 
+define :log_slimline_counter do |idx|
+  if get[:log_counters] == true #and idx % 4 == 0
+    puts "Bar: #{get[:current_bar]} / #{get[:num_bars]} | Beat: #{ get[:current_beat] } / #{get[:num_beats]} | 16th: #{idx}"
+  end
+end
+
 define :print_all_values do |idx|
   if get[:log_counters] == true #and idx % 4 == 0
-    log_bar_counter(get[:num_bars], get[:num_beats])
-    log_beat_counter(get[:num_bars], get[:num_beats])
-    log_16th_counter(get[:num_bars], get[:num_beats], idx)
+    log_bar_counter()
+    log_beat_counter()
+    log_16th_counter(idx)
   end
 end
 
