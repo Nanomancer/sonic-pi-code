@@ -5,7 +5,6 @@
 
 ##| live_loop :the_clock do
 ##|   clk_div_even(tick)
-##|   sleep 0.25
 ##| end
 
 ##### INITIALISE KEYS #####
@@ -17,6 +16,7 @@ set :current_bar, 0
 set :current_beat, 0
 set :current_16th, 0
 set :log_counters, true
+set :rate, 0.25
 
 ##### 'MAIN()' function
 
@@ -35,13 +35,16 @@ define :clk_div_even do | idx, display=false |
   send_cue(idx, :beat, 4,true)
   send_cue(idx, :note_8th, 2,true)
   cue :clk, count: idx
-  set_bar_counter(idx, 16)
-  set_beat_counter(idx, 4)
+  
+  set_beat_counter(idx)
+  sleep get[:rate]
+  
+  ##| set_bar_counter(idx, 16)
   set_count(:current_16th)
   
-  reset_count(:current_bar, (get[:num_bars]))
-  reset_count(:current_beat, (get[:num_beats]))
-  reset_count(:current_16th, (16 * get[:num_beats]))
+  ##| reset_count(:current_bar, (get[:num_bars]))
+  ##| reset_count(:current_beat, (get[:num_beats]))
+  ##| reset_count(:current_16th, (16 * get[:num_beats]))
 end
 
 ##### Helpers #####
@@ -63,6 +66,7 @@ define :send_cue do |idx, key_cue, div, bool=false|
   if test_modulo(idx, div) == true and bool == true
     ### send on clock count of zero
     cue key_cue
+    puts "send_cue executed on idx=#{idx} | mod val=#{idx % get[:num_beats]} | beat=#{get[:current_beat]}"
   elsif test_modulo(idx, div) == true and idx > 0
     ### default behaviour
     cue key_cue
@@ -76,11 +80,11 @@ define :set_bar_counter do |idx, div|
   end
 end
 
-define :set_beat_counter do |idx, div|
-  if test_modulo(idx, div) == true and idx >= 3 # need more complex logic here
-    # onlu when above and
+define :set_beat_counter do |idx|
+  if test_modulo(idx, get[:num_beats]) == true and idx > 0 # need more complex logic here
     set_count(:current_beat)
     set_count(:total_beats)
+    puts "Beat counter executed | mod val=#{idx % get[:num_beats]} | beat=#{get[:current_beat]}"
   end
 end
 
