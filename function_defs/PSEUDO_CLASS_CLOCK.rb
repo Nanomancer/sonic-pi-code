@@ -17,7 +17,7 @@ set :total_bars, 0
 set :total_beats, 0
 set :current_bar, 0
 set :current_beat, 0
-set :log_counters, true
+set :log_counter, true
 set :debug_all, false
 
 ##### clk_div_even() function - public
@@ -115,7 +115,7 @@ end
 ##### debugging and printed output #####
 
 define :log_slimline_counter do |idx|
-  if get[:log_counters] == true and idx % 4 == 0
+  if get[:log_counter] == true and idx % 4 == 0
     puts "\
 Bar: #{(1 + get[:current_bar])} / #{get[:num_bars]} | \
 Beat: #{( 1 + get[:current_beat])} / #{get[:num_beats]} | \
