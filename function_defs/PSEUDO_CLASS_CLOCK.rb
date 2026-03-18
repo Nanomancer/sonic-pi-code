@@ -1,5 +1,6 @@
 #### PSUEDO_CLASS_CLOCK
 # 'public' function: :clk_div_even(), all others 'private'
+# sends out cues and updates a table of current and total bars and beats etc.
 
 ### KEEP IN MIND; live coding, clean coding and audience understanding
 ### call like:
