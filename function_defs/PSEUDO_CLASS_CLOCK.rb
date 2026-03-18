@@ -1,21 +1,21 @@
 #### PSUEDO_CLASS_CLOCK
 
-### KEEP IN MIND LIVE CODING + RULES OF AUDIENCE UNDERSTANDING
+### KEEP IN MIND; live coding, clean coding and audience understanding
 ### call like:
-## note - sleep now handled by clk_div_even()
+
 ##| live_loop :the_clock do
 ##|   clk_div_even(tick)
+##| sleep 0.25
 ##| end
 
 ##### INITIALISE KEYS #####
+
 set :num_bars, 8
 set :num_beats, 4
 set :total_bars, 0
 set :total_beats, 0
-set :total_16th, 0
 set :current_bar, 0
 set :current_beat, 0
-##| set :rate, 0.25
 set :log_counters, true
 set :debug_all, true
 
@@ -31,7 +31,7 @@ define :clk_div_even do | idx, display=false |
   reset_count(idx, :current_beat, (get[:num_beats]))
   reset_count(idx, :current_16th, (16 * get[:num_beats]))
   log_slimline_counter(idx)
-  
+  ###########################
   send_cue(idx, :bar64, 1024)
   send_cue(idx, :bar32, 512)
   send_cue(idx, :bar16, 256)
@@ -51,14 +51,12 @@ define :count_reset_all do |idx|
   if idx == 0
     set :total_bars, 0
     set :total_beats, 0
-    
     set :current_bar, 0
     set :current_beat, 0
     set :current_16th, 0
     if get[:debug_all] then puts "count_reset_all() exec. idx: #{idx}" end
   end
 end
-
 
 define :send_cue do |idx, key_cue, div, bool=false|
   ### bool is optional start on zero or not
@@ -112,6 +110,8 @@ define :reset_count do |idx, key, reset_every|
     end
   end
 end
+
+##### debugging and printed output #####
 
 define :log_slimline_counter do |idx|
   if get[:log_counters] == true and idx % 4 == 0
