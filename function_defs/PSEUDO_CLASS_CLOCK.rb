@@ -1,4 +1,5 @@
 #### PSUEDO_CLASS_CLOCK
+# 'public' function: :clk_div_even(), all others 'private'
 
 ### KEEP IN MIND; live coding, clean coding and audience understanding
 ### call like:
@@ -19,7 +20,7 @@ set :current_beat, 0
 set :log_counters, true
 set :debug_all, false
 
-##### 'MAIN()' function
+##### clk_div_even() function - public
 
 define :clk_div_even do | idx |
   if get[:debug_all] and idx == 0 then puts "Clock divider started" end
@@ -103,7 +104,7 @@ end
 
 define :reset_count do |idx, key, reset_every|
   if get[:debug_all] then prev_val = get[key] end
-  if get[key] >= reset_every #(bars-1)
+  if get[key] >= reset_every
     set key, 0
     if get[:debug_all]
       reset_count_statement(idx, prev_val, key, reset_every)
@@ -115,7 +116,6 @@ end
 
 define :log_slimline_counter do |idx|
   if get[:log_counters] == true and idx % 4 == 0
-    ##| puts "Bar: #{get[:current_bar]} / #{get[:num_bars]} | Beat: #{ get[:current_beat] } / #{get[:num_beats]} | 16th: #{get[:current_16th]}"
     puts "\
 Bar: #{(1 + get[:current_bar])} / #{get[:num_bars]} | \
 Beat: #{( 1 + get[:current_beat])} / #{get[:num_beats]} | \
