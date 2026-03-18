@@ -23,7 +23,7 @@ set :debug_all, false
 ##### clk_div_even() function - public
 
 define :clk_div_even do | idx |
-  if get[:debug_all] and idx == 0 then puts "Clock divider started" end
+  ##| if get[:debug_all] and idx == 0 then puts "Clock divider started" end
   count_reset_all(idx)
   if idx > 0 then set_count(idx, :current_16th) end
   set_beat_counter(idx)
@@ -64,11 +64,11 @@ define :send_cue do |idx, key_cue, div, bool=false|
   if test_modulo(idx, div) == true and bool == true
     ### send on clock count of zero
     cue key_cue
-    if get[:debug_all] then debug_send_cue(idx, key_cue) end
+    ##| if get[:debug_all] then debug_send_cue(idx, key_cue) end
   elsif test_modulo(idx, div) == true and idx > 0
     ### default behaviour
     cue key_cue
-    if get[:debug_all] then debug_send_cue(idx, key_cue) end
+    ##| if get[:debug_all] then debug_send_cue(idx, key_cue) end
   end
 end
 
@@ -76,7 +76,7 @@ define :set_bar_counter do |idx|
   if test_modulo(idx, 16) == true and idx > 0
     set_count(idx, :current_bar)
     set_count(idx, :total_bars)
-    if get[:debug_all] then debug_bar_counter(idx) end
+    ##| if get[:debug_all] then debug_bar_counter(idx) end
   end
 end
 
@@ -84,7 +84,7 @@ define :set_beat_counter do |idx|
   if test_modulo(idx, 4) == true and idx > 0
     set_count(idx, :current_beat)
     set_count(idx, :total_beats)
-    if get[:debug_all] then debug_beat_counter(idx) end
+    ##| if get[:debug_all] then debug_beat_counter(idx) end
   end
 end
 
@@ -95,20 +95,20 @@ define :test_modulo do |idx, division|
 end
 
 define :set_count do |idx, key|
-  if get[:debug_all] then prev_val = get[key] end
+  ##| if get[:debug_all] then prev_val = get[key] end
   set key, (1 + get[key])
-  if get[:debug_all]
-    set_count_statement(idx, prev_val, key)
-  end
+  ##| if get[:debug_all]
+  ##|   set_count_statement(idx, prev_val, key)
+  ##| end
 end
 
 define :reset_count do |idx, key, reset_every|
-  if get[:debug_all] then prev_val = get[key] end
+  ##| if get[:debug_all] then prev_val = get[key] end
   if get[key] >= reset_every
     set key, 0
-    if get[:debug_all]
-      reset_count_statement(idx, prev_val, key, reset_every)
-    end
+    ##| if get[:debug_all]
+    ##|   reset_count_statement(idx, prev_val, key, reset_every)
+    ##| end
   end
 end
 
@@ -124,44 +124,44 @@ Beat: #{( 1 + get[:current_beat])} / #{get[:num_beats]} | \
   end
 end
 
-define :debug_send_cue do |idx, key_cue|
-  puts "\
-send_cue() exec. at idx: #{idx} | \
-beat: #{get[:current_beat]} | \
-bar: #{get[:current_bar]} | key: :#{key_cue}\
-"
-end
+##| define :debug_send_cue do |idx, key_cue|
+##|   puts "\
+##| send_cue() exec. at idx: #{idx} | \
+##| beat: #{get[:current_beat]} | \
+##| bar: #{get[:current_bar]} | key: :#{key_cue}\
+##| "
+##| end
 
-define :debug_bar_counter do |idx|
-  puts "\
-bar_counter() exec. at idx: #{idx} | \
-mod val=#{idx % get[:num_bars]}  | \
-bar: #{get[:current_bar]}\
-"
-end
+##| define :debug_bar_counter do |idx|
+##|   puts "\
+##| bar_counter() exec. at idx: #{idx} | \
+##| mod val=#{idx % get[:num_bars]}  | \
+##| bar: #{get[:current_bar]}\
+##| "
+##| end
 
-define :debug_beat_counter do |idx|
-  puts "\
-beat_counter() exec. at idx: #{idx}. | \
-mod val=#{idx % get[:num_beats]} | \
-beat=#{get[:current_beat]}"
-end
+##| define :debug_beat_counter do |idx|
+##|   puts "\
+##| beat_counter() exec. at idx: #{idx}. | \
+##| mod val=#{idx % get[:num_beats]} | \
+##| beat=#{get[:current_beat]}"
+##| end
 
-define :set_count_statement do | idx, prev_val, key |
-  puts "\
-set_count() exec. on idx: #{idx} | \
-prev val: #{prev_val} | \
-new val: #{get[key]} | \
-key: #{key}\
-"
-end
+##| define :set_count_statement do | idx, prev_val, key |
+##|   puts "\
+##| set_count() exec. on idx: #{idx} | \
+##| prev val: #{prev_val} | \
+##| new val: #{get[key]} | \
+##| key: #{key}\
+##| "
+##| end
 
-define :reset_count_statement do | idx, prev_val, key, reset_every |
-  puts "\
-reset_count() exec. at idx: #{idx} | \
-prev val: #{prev_val} | \
-new val: #{get[key]} | \
-reset_every: #{reset_every} | \
-key: #{key}\
-"
-end
+##| define :reset_count_statement do | idx, prev_val, key, reset_every |
+##|   puts "\
+##| reset_count() exec. at idx: #{idx} | \
+##| prev val: #{prev_val} | \
+##| new val: #{get[key]} | \
+##| reset_every: #{reset_every} | \
+##| key: #{key}\
+##| "
+##| end
