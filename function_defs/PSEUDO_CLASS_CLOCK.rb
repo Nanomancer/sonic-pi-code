@@ -31,7 +31,7 @@ define :clk_div_even do | idx, display=false |
   reset_count(idx, :current_beat, (get[:num_beats]))
   reset_count(idx, :current_16th, (16 * get[:num_beats]))
   log_slimline_counter(idx)
-  ###########################
+  ##### cues #####
   send_cue(idx, :bar64, 1024)
   send_cue(idx, :bar32, 512)
   send_cue(idx, :bar16, 256)
