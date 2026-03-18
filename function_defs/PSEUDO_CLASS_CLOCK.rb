@@ -115,7 +115,8 @@ end
 
 define :log_slimline_counter do |idx|
   if get[:log_counters] == true and idx % 4 == 0
-    puts "Bar: #{get[:current_bar]} / #{get[:num_bars]} | Beat: #{ get[:current_beat] } / #{get[:num_beats]} | 16th: #{idx}"
+    ##| puts "Bar: #{get[:current_bar]} / #{get[:num_bars]} | Beat: #{ get[:current_beat] } / #{get[:num_beats]} | 16th: #{get[:current_16th]}"
+    puts "Bar: #{(1 + get[:current_bar])} / #{get[:num_bars]} | Beat: #{( 1 + get[:current_beat])} / #{get[:num_beats]} | 16th: #{( 1 + get[:current_16th])}"
   end
 end
 
