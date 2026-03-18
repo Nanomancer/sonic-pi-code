@@ -15,38 +15,34 @@ set :total_beats, 0
 set :total_16th, 0
 set :current_bar, 0
 set :current_beat, 0
-set :rate, 0.25
+##| set :rate, 0.25
 set :log_counters, true
 set :debug_all, true
 
 ##### 'MAIN()' function
 
 define :clk_div_even do | idx, display=false |
-  if get[:debug_all] and idx == 0 then puts "Clock Started" end
+  if get[:debug_all] and idx == 0 then puts "Clock divider started" end
   count_reset_all(idx)
-  ##| should setters go here?
+  if idx > 0 then set_count(idx, :current_16th) end
+  set_beat_counter(idx)
+  set_bar_counter(idx)
+  reset_count(idx, :current_bar, (get[:num_bars]))
+  reset_count(idx, :current_beat, (get[:num_beats]))
+  reset_count(idx, :current_16th, (16 * get[:num_beats]))
   log_slimline_counter(idx)
+  
   send_cue(idx, :bar64, 1024)
   send_cue(idx, :bar32, 512)
   send_cue(idx, :bar16, 256)
   send_cue(idx, :bar8, 128)
   send_cue(idx, :bar4, 64)
   send_cue(idx, :bar2, 32)
-  
   send_cue(idx, :bar1, 16, true)
   send_cue(idx, :bar_half, 8,true)
   send_cue(idx, :beat, 4,true)
   send_cue(idx, :note_8th, 2,true)
   cue :clk, count: idx
-  sleep get[:rate]
-  
-  set_beat_counter(idx)
-  set_bar_counter(idx)
-  set_count(idx, :current_16th)
-  
-  reset_count(idx, :current_bar, (get[:num_bars]))
-  reset_count(idx, :current_beat, (get[:num_beats]))
-  reset_count(idx, :current_16th, (16 * get[:num_beats]))
 end
 
 ##### Helpers #####
