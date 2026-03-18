@@ -1,4 +1,4 @@
-### first sound, time: 00:56
+### first sound, time: 00:55
 
 use_bpm 120
 
