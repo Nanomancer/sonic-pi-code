@@ -11,8 +11,8 @@
   * no need to log time taken for file management as only for record keeping, not performance.
 
 * use pushes to log key phases after practise - log time taken in mins/secs
-  * eg, git com. "session 1, part 1, attempt 1..2 etc - basic intro - time: 01:47"
-  * eg, git com. "session 1, part 2 - intro with drums - time: 2:30"
+  * eg, git com. "session 1, part 1 - first sound, attempt 1..2 etc, time: 01:47"
+  * eg, git com. "session 1, part 2 - intro with drums, attempt 4, time: 2:30"
 
 ### getting up and running ASAP:
 
