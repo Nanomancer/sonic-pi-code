@@ -1,18 +1,14 @@
-### session 2
+### session 3
 
-### phase 1: first sound - drone
-### attempt 1, time 00:55
-### attempt 2, time 01:00
-### attempt 3, time 00:44
-### attempt 4, time 00:43
-### attempt 5, time 00:38
+### phase 1: first sound - drone, next target: < 00:30
+## N/A
 
-### phase 2: set up clock & syncs
-### attempt 1, time 01:37
-### attempt 2, time 01:00
-### attempt 3, time 00:48
-### attempt 4, time 00:42
-### attempt 5, time 00:40
+### phase 2: set up clock & syncs next target: < 00:30
+### attempt 1, time 00:50
+### attempt 2, time 00:43
+### attempt 3, time 00:45
+### attempt 4, time 00:44
+### attempt 5, time 00:35
 
 ### phase 3: add beep (will become tech arp or lead)
 
