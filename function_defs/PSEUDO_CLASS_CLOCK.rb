@@ -12,8 +12,8 @@
 
 ##### INITIALISE KEYS #####
 
-set :num_bars, 8
-set :num_beats, 4
+set :num_bars, 16
+set :num_beats, 8
 set :t_bars, 0 # total
 set :t_beats, 0
 set :c_bar, 0 # current
