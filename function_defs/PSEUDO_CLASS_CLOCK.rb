@@ -14,10 +14,10 @@
 
 set :num_bars, 8
 set :num_beats, 4
-set :total_bars, 0
-set :total_beats, 0
-set :current_bar, 0
-set :current_beat, 0
+set :t_bars, 0 # total
+set :t_beats, 0
+set :c_bar, 0 # current
+set :c_beat, 0
 set :log_counter, true
 set :debug_all, false
 
@@ -26,12 +26,12 @@ set :debug_all, false
 define :clk_div_even do | idx |
   ##| if get[:debug_all] and idx == 0 then puts "Clock divider started" end
   count_reset_all(idx)
-  if idx > 0 then set_count(idx, :current_16th) end
+  if idx > 0 then set_count(idx, :c_16th) end
   set_beat_counter(idx)
   set_bar_counter(idx)
-  reset_count(idx, :current_bar, (get[:num_bars]))
-  reset_count(idx, :current_beat, (get[:num_beats]))
-  reset_count(idx, :current_16th, (16 * get[:num_beats]))
+  reset_count(idx, :c_bar, (get[:num_bars]))
+  reset_count(idx, :c_beat, (get[:num_beats]))
+  reset_count(idx, :c_16th, (16 * get[:num_beats]))
   log_slimline_counter(idx)
   ##### cues #####
   send_cue(idx, :bar64, 1024)
@@ -51,11 +51,11 @@ end
 
 define :count_reset_all do |idx|
   if idx == 0
-    set :total_bars, 0
-    set :total_beats, 0
-    set :current_bar, 0
-    set :current_beat, 0
-    set :current_16th, 0
+    set :t_bars, 0
+    set :t_beats, 0
+    set :c_bar, 0
+    set :c_beat, 0
+    set :c_16th, 0
     if get[:debug_all] then puts "count_reset_all() exec. idx: #{idx}" end
   end
 end
@@ -75,16 +75,16 @@ end
 
 define :set_bar_counter do |idx|
   if test_modulo(idx, 16) == true and idx > 0
-    set_count(idx, :current_bar)
-    set_count(idx, :total_bars)
+    set_count(idx, :c_bar)
+    set_count(idx, :t_bars)
     ##| if get[:debug_all] then debug_bar_counter(idx) end
   end
 end
 
 define :set_beat_counter do |idx|
   if test_modulo(idx, 4) == true and idx > 0
-    set_count(idx, :current_beat)
-    set_count(idx, :total_beats)
+    set_count(idx, :c_beat)
+    set_count(idx, :t_beats)
     ##| if get[:debug_all] then debug_beat_counter(idx) end
   end
 end
@@ -118,9 +118,8 @@ end
 define :log_slimline_counter do |idx|
   if get[:log_counter] == true and idx % 4 == 0
     puts "\
-Bar: #{(1 + get[:current_bar])} / #{get[:num_bars]} | \
-Beat: #{( 1 + get[:current_beat])} / #{get[:num_beats]} | \
-16th: #{( 1 + get[:current_16th])}\
+Bar: #{(1 + get[:c_bar])} / #{get[:num_bars]} | \
+Beat: #{( 1 + get[:c_beat])} / #{get[:num_beats]} | \
 "
   end
 end
@@ -128,8 +127,8 @@ end
 ##| define :debug_send_cue do |idx, key_cue|
 ##|   puts "\
 ##| send_cue() exec. at idx: #{idx} | \
-##| beat: #{get[:current_beat]} | \
-##| bar: #{get[:current_bar]} | key: :#{key_cue}\
+##| beat: #{get[:c_beat]} | \
+##| bar: #{get[:c_bar]} | key: :#{key_cue}\
 ##| "
 ##| end
 
@@ -137,7 +136,7 @@ end
 ##|   puts "\
 ##| bar_counter() exec. at idx: #{idx} | \
 ##| mod val=#{idx % get[:num_bars]}  | \
-##| bar: #{get[:current_bar]}\
+##| bar: #{get[:c_bar]}\
 ##| "
 ##| end
 
@@ -145,7 +144,7 @@ end
 ##|   puts "\
 ##| beat_counter() exec. at idx: #{idx}. | \
 ##| mod val=#{idx % get[:num_beats]} | \
-##| beat=#{get[:current_beat]}"
+##| beat=#{get[:c_beat]}"
 ##| end
 
 ##| define :set_count_statement do | idx, prev_val, key |
