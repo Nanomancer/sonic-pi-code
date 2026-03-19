@@ -8,11 +8,11 @@
 ### attempt 5, time 00:38
 
 ### phase 2: set up clock & syncs
-### attempt 1, time 00:
-### attempt 2, time 01:
-### attempt 3, time 00:
-### attempt 4, time 00:
-### attempt 5, time 00:
+### attempt 1, time 01:37
+### attempt 2, time 01:00
+### attempt 3, time 00:48
+### attempt 4, time 00:42
+### attempt 5, time 00:40
 
 ### phase 3: add beep (will become tech arp or lead)
 
